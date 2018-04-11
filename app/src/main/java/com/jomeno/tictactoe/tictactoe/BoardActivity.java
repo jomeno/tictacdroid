@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class BoardActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -20,6 +22,7 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     private int boardSize = 3;
     private Player turnPlayer;
     private ArrayList<Player> players;
+    private boolean isOpponentAi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +32,46 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         tiles = new ArrayList<>();
         sets = new ArrayList<>();
         set = new Set();
+        isOpponentAi = true;
 
         // initialize players
         setupPlayers();
 
         // initialize board
-        this.boardSize = 3;
+        boardSize = 3;
         setupBoard(this.boardSize);
     }
 
     @Override
     public void onClick(View view) {
 
+    }
+
+    private void play(Tile tile, ImageView imageTile) {
+        if (set.isOver()) {
+            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.game_over), Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        if (imageTile.getTag(imageTile.getId()) != null) return;
+
+        if (turnPlayer.isTileCross()) {
+            imageTile.setImageResource(R.drawable.board_tile_cross);
+        } else {
+            imageTile.setImageResource(R.drawable.board_tile_nought);
+        }
+
+        //int id = tiles.indexOf(tile);
+        //Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(id), Toast.LENGTH_SHORT);
+        //toast.show();
+
+        // mark imageTile and tile as taken
+        imageTile.setTag(imageTile.getId(), "TAKEN");
+        tile.setTaken(true);
+        tile.setCross(turnPlayer.isTileCross());
+
+        // check if set is over
+        setOutcome(boardSize);
     }
 
     private void setupPlayers() {
@@ -82,50 +113,44 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
             for (int j = 0; j < imageCount; j++) {
                 View v = ((LinearLayout) rowLayout).getChildAt(j);
                 if (v instanceof ImageView) {
-                    final ImageView imageTile = (ImageView) v;
+                    final ImageView tileImage = (ImageView) v;
                     final Tile tile = new Tile();
 
                     // set onclick listener
-                    imageTile.setOnClickListener(new View.OnClickListener() {
+                    tileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            // swap imageTile and toggle player
+                            // swap tileImage and toggle player
+
                             if (turnPlayer != null) {
 
-                                if (set.isOver()) {
-                                    Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.game_over), Toast.LENGTH_SHORT);
-                                    toast.show();
-                                    return;
-                                }
-                                if (imageTile.getTag(imageTile.getId()) != null) return;
+                                // play turn
+                                play(tile, tileImage);
 
-                                if (turnPlayer.isTileCross()) {
-                                    imageTile.setImageResource(R.drawable.board_tile_cross);
-                                } else {
-                                    imageTile.setImageResource(R.drawable.board_tile_nought);
-                                }
+                                // set next player
+                                turnPlayer = players.get(1);
 
-                                //Toast toast = Toast.makeText(getApplicationContext(), "Tapped", Toast.LENGTH_SHORT);
-                                //toast.show();
+                                // play for AI
+                                if (turnPlayer.getId() == 2 && isOpponentAi && !set.isOver()) {
+                                    ArrayList<Tile> unusedTiles = new ArrayList<>();
+                                    for (Tile t : tiles) {
+                                        if (t.isCross() == null) unusedTiles.add(t);
+                                    }
 
-                                // note that this tile has been taken
-                                imageTile.setTag(imageTile.getId(), "TAKEN");
-                                tile.setCross(turnPlayer.isTileCross());
-
-                                // check if set over
-                                setOutcome(boardSize);
-
-                                // change player turn
-                                if (turnPlayer.getId() == 1) {
-                                    turnPlayer = players.get(1);
-                                } else {
-                                    turnPlayer = players.get(0);
+                                    if (unusedTiles.isEmpty() == false) {
+                                        Random rand = new Random();
+                                        int tileIndex = rand.nextInt(tiles.size());
+                                        Tile tile = tiles.get(tileIndex);
+                                        play(tile, tile.getImage());
+                                        // set next player
+                                        turnPlayer = players.get(0);
+                                    }
                                 }
                             }
                         }
                     });
 
-                    tile.setImage(imageTile);
+                    tile.setImage(tileImage);
                     tiles.add(tile);
                 }
             }
@@ -154,7 +179,7 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
 
         // check for a left diagonal win
         matchCount = leftDiagonalMatchCount(boardSize);
-        if(matchCount == boardSize) {
+        if (matchCount == boardSize) {
             gameOver(true, matchCount, boardSize);
             return;
         }

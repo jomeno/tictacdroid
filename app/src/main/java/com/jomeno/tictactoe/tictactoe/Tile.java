@@ -31,4 +31,14 @@ public class Tile {
     }
 
     private Boolean isCross;
+
+    public boolean isTaken() {
+        return isTaken;
+    }
+
+    public void setTaken(boolean taken) {
+        isTaken = taken;
+    }
+
+    private boolean isTaken;
 }
