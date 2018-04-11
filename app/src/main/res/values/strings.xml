@@ -1,0 +1,6 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Tic Tac Droid</string>
+    <string name="winner">Winner is <xliff:g id="player_name" example="Player 1">%s</xliff:g></string>
+    <string name="game_over">Game Over!</string>
+    <string name="tie_message">You Tied!</string>
+</resources>
