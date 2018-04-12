@@ -201,8 +201,13 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
                                 boolean isPlayed = play(tile, tileImage);
 
                                 // set next player
-                                if (isPlayed)
-                                    turnPlayer = players.get(1);
+                                if (isPlayed){
+                                    if(turnPlayer.getId() == 1){
+                                        turnPlayer = players.get(1);
+                                    }else{
+                                        turnPlayer = players.get(0);
+                                    }
+                                }
 
                                 // play for AI
                                 if (turnPlayer.getId() == 2 && isOpponentAi && !set.isOver()) {
