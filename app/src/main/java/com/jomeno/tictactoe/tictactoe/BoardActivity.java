@@ -19,6 +19,7 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     private static String EXTRA_BOARD_SIZE = "board_size";
     private static String EXTRA_OPPONENT_PLAYER = "opponent_player";
     private static String EXTRA_TILE_CHOICE = "tile_choice";
+    private static String TILES = "tiles";
 
     private ArrayList<Set> sets;
     private Set set;
@@ -37,10 +38,19 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
+        // recovering the instance state
+        if (savedInstanceState != null) {
+            boardSize = savedInstanceState.getInt(EXTRA_BOARD_SIZE);
+            isOpponentAi = savedInstanceState.getBoolean(EXTRA_OPPONENT_PLAYER);
+            player1TileChoice = savedInstanceState.getBoolean(EXTRA_TILE_CHOICE);
+        }
+
         Intent intent = getIntent();
-        boardSize = intent.getIntExtra(EXTRA_BOARD_SIZE, boardSize);
-        isOpponentAi = intent.getBooleanExtra(EXTRA_OPPONENT_PLAYER, isOpponentAi);
-        player1TileChoice = intent.getBooleanExtra(EXTRA_TILE_CHOICE, player1TileChoice);
+        if (intent != null) {
+            boardSize = intent.getIntExtra(EXTRA_BOARD_SIZE, boardSize);
+            isOpponentAi = intent.getBooleanExtra(EXTRA_OPPONENT_PLAYER, isOpponentAi);
+            player1TileChoice = intent.getBooleanExtra(EXTRA_TILE_CHOICE, player1TileChoice);
+        }
 
         tiles = new ArrayList<>();
         sets = new ArrayList<>();
@@ -58,6 +68,16 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         menuItem.setOnClickListener(this);
         ImageView continueSet = findViewById(R.id.continue_set);
         continueSet.setOnClickListener(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(EXTRA_BOARD_SIZE, boardSize);
+        outState.putBoolean(EXTRA_OPPONENT_PLAYER, isOpponentAi);
+        outState.putBoolean(EXTRA_TILE_CHOICE, player1TileChoice);
+
+        // save any view hierarchy
+        super.onSaveInstanceState(outState);
     }
 
     private void setupScoreBoard() {
@@ -201,10 +221,10 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
                                 boolean isPlayed = play(tile, tileImage);
 
                                 // set next player
-                                if (isPlayed){
-                                    if(turnPlayer.getId() == 1){
+                                if (isPlayed) {
+                                    if (turnPlayer.getId() == 1) {
                                         turnPlayer = players.get(1);
-                                    }else{
+                                    } else {
                                         turnPlayer = players.get(0);
                                     }
                                 }

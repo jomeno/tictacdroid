@@ -1,82 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.jomeno.tictactoe.tictactoe.ChooseTileActivity">
+    tools:context="com.jomeno.tictactoe.tictactoe.ChooseTileActivity" android:fillViewport="true">
 
-
-    <ImageView
-        android:id="@+id/board_bottom"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/background_middle_slice" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/board_top"
+            android:id="@+id/board_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:scaleType="fitXY"
-            android:src="@drawable/board_background_top_slice" />
+            android:src="@drawable/background_middle_slice" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:id="@+id/board_top"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/choose"
-                android:layout_marginBottom="24dp"/>
+                android:scaleType="fitXY"
+                android:src="@drawable/board_background_top_slice" />
 
-            <ImageView
-                android:id="@+id/choice_nought"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/board_tile_nought"
-                android:layout_marginBottom="8dp" />
-            <ImageView
-                android:id="@+id/nought_or_cross"
-                android:layout_width="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:src="@drawable/choose" />
+
+                <ImageView
+                    android:id="@+id/choice_nought"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/board_tile_nought" />
+
+                <ImageView
+                    android:id="@+id/nought_or_cross"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/noughts_or_crosses" />
+
+                <ImageView
+                    android:id="@+id/choice_cross"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/board_tile_cross" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/board_tiles"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/noughts_or_crosses"
-                android:layout_marginBottom="8dp" />
-            <ImageView
-                android:id="@+id/choice_cross"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/board_tile_cross"
-                android:layout_marginBottom="8dp" />
+                android:orientation="vertical"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"></LinearLayout>
+
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/board_tiles"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"></LinearLayout>
 
-
-    </LinearLayout>
-
-
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
