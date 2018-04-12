@@ -16,69 +16,73 @@ import java.util.Random;
 
 public class BoardActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static String EXTRA_BOARD_SIZE = "board_size";
+    private static String EXTRA_OPPONENT_PLAYER = "opponent_player";
+    private static String EXTRA_TILE_CHOICE = "tile_choice";
+
     private ArrayList<Set> sets;
     private Set set;
     private ArrayList<Tile> tiles;
-    private boolean NOUGHTS = false;
+    private boolean NOUGHT = false;
     private boolean CROSS = true;
-    private int boardSize = 3;
+
     private Player turnPlayer;
     private ArrayList<Player> players;
-    private boolean isOpponentAi;
-    private ImageView continueSet;
-    private RelativeLayout scoreBoardRelativeLayout;
-    private ImageView scoreBoardBgImageView;
-    private ImageView player1ScoreTile;
-    private ImageView player2ScoreTile;
+    private boolean isOpponentAi = true;
+    private int boardSize = 3;
+    private boolean player1TileChoice = NOUGHT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
+        Intent intent = getIntent();
+        boardSize = intent.getIntExtra(EXTRA_BOARD_SIZE, boardSize);
+        isOpponentAi = intent.getBooleanExtra(EXTRA_OPPONENT_PLAYER, isOpponentAi);
+        player1TileChoice = intent.getBooleanExtra(EXTRA_TILE_CHOICE, player1TileChoice);
+
         tiles = new ArrayList<>();
         sets = new ArrayList<>();
         set = new Set();
-        isOpponentAi = true;
-
-        scoreBoardRelativeLayout = findViewById(R.id.score_board);
-        scoreBoardBgImageView = findViewById(R.id.score_board_bg);
-        player1ScoreTile = findViewById(R.id.player1_tile);
-        player2ScoreTile = findViewById(R.id.player2_tile);
 
         // initialize players
         setupPlayers();
 
         // initialize boards
-        boardSize = 3;
-        setupBoard(this.boardSize);
+        setupGameBoard(boardSize);
         setupScoreBoard();
 
         // register click listeners
         ImageView menuItem = findViewById(R.id.board_menu);
         menuItem.setOnClickListener(this);
-        continueSet = findViewById(R.id.continue_set);
+        ImageView continueSet = findViewById(R.id.continue_set);
         continueSet.setOnClickListener(this);
     }
 
-    private void setupScoreBoard(){
-        if(players != null){
-            if(players.get(0).isTileCross()){
+    private void setupScoreBoard() {
+        ImageView player1ScoreTile = findViewById(R.id.player1_tile);
+        ImageView player2ScoreTile = findViewById(R.id.player2_tile);
+        if (players != null) {
+            if (players.get(0).isTileCross()) {
                 player1ScoreTile.setImageResource(R.drawable.white_cross_transparent);
                 player2ScoreTile.setImageResource(R.drawable.white_naught_transparent);
-            }else{
+            } else {
                 player1ScoreTile.setImageResource(R.drawable.white_naught_transparent);
                 player2ScoreTile.setImageResource(R.drawable.white_cross_transparent);
             }
         }
     }
 
-    private void displayScore(boolean visible) {
+    private void displayScoreBoard(boolean visible) {
+        RelativeLayout scoreBoardRelativeLayout = findViewById(R.id.score_board);
+        ImageView scoreBoardBgImageView = findViewById(R.id.score_board_bg);
+        ImageView continueSet = findViewById(R.id.continue_set);
         if (visible) {
             scoreBoardRelativeLayout.setVisibility(View.VISIBLE);
             scoreBoardBgImageView.setVisibility(View.VISIBLE);
             continueSet.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             scoreBoardRelativeLayout.setVisibility(View.INVISIBLE);
             scoreBoardBgImageView.setVisibility(View.INVISIBLE);
             continueSet.setVisibility(View.GONE);
@@ -89,7 +93,7 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.board_menu:
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, ChooseTileActivity.class);
                 startActivity(intent);
                 break;
             case R.id.continue_set:
@@ -103,36 +107,43 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         if (set.isOver()) {
             set = new Set();
             turnPlayer = players.get(0);
-            setupBoard(boardSize);
-            displayScore(false);
+            setupGameBoard(boardSize);
+            displayScoreBoard(false);
         }
     }
 
-    private void play(Tile tile, ImageView imageTile) {
+    private boolean play(Tile tile, ImageView tileImage) {
         if (set.isOver()) {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.game_over), Toast.LENGTH_SHORT);
             toast.show();
-            return;
+            return false;
         }
-        if (imageTile.getTag(imageTile.getId()) != null) return;
+        //if (tileImage.getTag(tileImage.getId()) != null) {
+        if (tile.isTaken() == true) {
+            Toast toast = Toast.makeText(getApplicationContext(), "This tile has been taken", Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
 
         if (turnPlayer.isTileCross()) {
-            imageTile.setImageResource(R.drawable.board_tile_cross);
+            tileImage.setImageResource(R.drawable.board_tile_cross);
         } else {
-            imageTile.setImageResource(R.drawable.board_tile_nought);
+            tileImage.setImageResource(R.drawable.board_tile_nought);
         }
 
-        //int id = tiles.indexOf(tile);
-        //Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(id), Toast.LENGTH_SHORT);
-        //toast.show();
+        /*int id = tiles.indexOf(tile);
+        Toast toast = Toast.makeText(getApplicationContext(), String.valueOf(id), Toast.LENGTH_SHORT);
+        toast.show();*/
 
-        // mark imageTile and tile as taken
-        imageTile.setTag(imageTile.getId(), "TAKEN");
+        // mark tileImage and tile as taken
+        //tileImage.setTag(tileImage.getId(), "TAKEN");
         tile.setTaken(true);
         tile.setCross(turnPlayer.isTileCross());
 
         // check if set is over
         setOutcome(boardSize);
+
+        return true;
     }
 
     private void setupPlayers() {
@@ -140,20 +151,20 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         Player player1 = new Player();
         player1.setId(1);
         player1.setName("You");
-        player1.setTileCross(false);
+        player1.setTileCross(player1TileChoice);
         players.add(player1);
 
         Player player2 = new Player();
         player2.setId(2);
         player2.setName("Player 2");
-        player2.setTileCross(true);
+        player2.setTileCross(!player1TileChoice);
         players.add(player2);
 
         // player 1 starts
         turnPlayer = player1;
     }
 
-    private void setupBoard(final int boardSize) {
+    private void setupGameBoard(final int boardSize) {
 
         tiles = new ArrayList<>();
         View boardLayout;
@@ -187,23 +198,24 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
                             if (turnPlayer != null) {
 
                                 // play turn
-                                play(tile, tileImage);
+                                boolean isPlayed = play(tile, tileImage);
 
                                 // set next player
-                                turnPlayer = players.get(1);
+                                if (isPlayed)
+                                    turnPlayer = players.get(1);
 
                                 // play for AI
                                 if (turnPlayer.getId() == 2 && isOpponentAi && !set.isOver()) {
                                     ArrayList<Tile> unusedTiles = new ArrayList<>();
                                     for (Tile t : tiles) {
-                                        if (t.isCross() == null) unusedTiles.add(t);
+                                        if (t.isTaken() == false) unusedTiles.add(t);
                                     }
 
                                     if (unusedTiles.isEmpty() == false) {
                                         Random rand = new Random();
-                                        int tileIndex = rand.nextInt(tiles.size());
-                                        Tile tile = tiles.get(tileIndex);
-                                        play(tile, tile.getImage());
+                                        int tileIndex = rand.nextInt(unusedTiles.size());
+                                        Tile aiTile = unusedTiles.get(tileIndex);
+                                        play(aiTile, aiTile.getImage());
                                         // set next player
                                         turnPlayer = players.get(0);
                                     }
@@ -386,7 +398,7 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         // archive set
         this.sets.add(set);
 
-        displayScore(true);
+        displayScoreBoard(true);
 
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();

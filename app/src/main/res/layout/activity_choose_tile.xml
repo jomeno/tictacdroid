@@ -37,10 +37,34 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingLeft="32dp"
             android:paddingRight="32dp">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/choose"
+                android:layout_marginBottom="24dp"/>
+
+            <ImageView
+                android:id="@+id/choice_nought"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/board_tile_nought"
+                android:layout_marginBottom="8dp" />
+            <ImageView
+                android:id="@+id/nought_or_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/noughts_or_crosses"
+                android:layout_marginBottom="8dp" />
+            <ImageView
+                android:id="@+id/choice_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/board_tile_cross"
+                android:layout_marginBottom="8dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,12 +78,5 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"
-        android:text="Menu"
-        android:textSize="24sp"></TextView>
+
 </RelativeLayout>

@@ -3,4 +3,8 @@
     <string name="winner">Winner is <xliff:g example="Player 1" id="player_name">%s</xliff:g></string>
     <string name="game_over">Game Over!</string>
     <string name="tie_message">You Tied!</string>
+    <string name="play_friend">Ready to play against a friend</string>
+    <string name="play_ai">Ready to play against me</string>
+    <string name="board_large">Large Board</string>
+    <string name="board_small">Small Board</string>
 </resources>
