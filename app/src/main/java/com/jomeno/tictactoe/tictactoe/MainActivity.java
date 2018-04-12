@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -13,8 +14,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button newGameButton = findViewById(R.id.new_game);
-        newGameButton.setOnClickListener(this);
+        ImageView newGameMenuItem = findViewById(R.id.new_game);
+        newGameMenuItem.setOnClickListener(this);
     }
 
     @Override

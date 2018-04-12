@@ -1,11 +1,14 @@
 package com.jomeno.tictactoe.tictactoe;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,6 +26,9 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     private Player turnPlayer;
     private ArrayList<Player> players;
     private boolean isOpponentAi;
+    private ImageView continueSet;
+    private RelativeLayout scoreBoardRelativeLayout;
+    private ImageView scoreBoardBgImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +40,56 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         set = new Set();
         isOpponentAi = true;
 
+        scoreBoardRelativeLayout = findViewById(R.id.score_board);
+        scoreBoardBgImageView = findViewById(R.id.score_board_bg);
+
         // initialize players
         setupPlayers();
 
         // initialize board
         boardSize = 3;
         setupBoard(this.boardSize);
+
+        // register click listeners
+        ImageView menuItem = findViewById(R.id.board_menu);
+        menuItem.setOnClickListener(this);
+        continueSet = findViewById(R.id.continue_set);
+        continueSet.setOnClickListener(this);
+    }
+
+    private void displayScore(boolean visible) {
+        if (visible) {
+            scoreBoardRelativeLayout.setVisibility(View.VISIBLE);
+            scoreBoardBgImageView.setVisibility(View.VISIBLE);
+            continueSet.setVisibility(View.VISIBLE);
+        }else{
+            scoreBoardRelativeLayout.setVisibility(View.INVISIBLE);
+            scoreBoardBgImageView.setVisibility(View.INVISIBLE);
+            continueSet.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.board_menu:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.continue_set:
+                beginNewSet(view);
+                break;
+        }
 
+    }
+
+    private void beginNewSet(View view) {
+        if (set.isOver()) {
+            set = new Set();
+            turnPlayer = players.get(0);
+            setupBoard(boardSize);
+            displayScore(false);
+        }
     }
 
     private void play(Tile tile, ImageView imageTile) {
@@ -97,8 +142,9 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         tiles = new ArrayList<>();
         View boardLayout;
         LinearLayout boardLayoutEmpty = findViewById(R.id.board_tiles);
+        boardLayoutEmpty.removeAllViews();
         if (boardSize == 5) {
-            boardLayout = LayoutInflater.from(this).inflate(R.layout.layout_board_3, boardLayoutEmpty, false);
+            boardLayout = LayoutInflater.from(this).inflate(R.layout.layout_board_5, boardLayoutEmpty, false);
         } else {
             boardLayout = LayoutInflater.from(this).inflate(R.layout.layout_board_3, boardLayoutEmpty, false);
         }
@@ -306,9 +352,25 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
 
         if (isWin && (winCount == boardSize)) {
             message = getString(R.string.winner, turnPlayer.getName());
+            // update player score
+            turnPlayer.setScore(turnPlayer.getScore() + 1);
+
+            TextView player1ScoreTextView = findViewById(R.id.player1_score);
+            Player player1 = this.players.get(0);
+            player1ScoreTextView.setText(String.valueOf(player1.getScore()));
+
+            TextView player2ScoreTextView = findViewById(R.id.player2_score);
+            Player player2 = this.players.get(1);
+            player2ScoreTextView.setText(String.valueOf(player2.getScore()));
+
         } else if (isWin == false) {
             message = getString(R.string.tie_message);
         }
+
+        // archive set
+        this.sets.add(set);
+
+        displayScore(true);
 
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         toast.show();
