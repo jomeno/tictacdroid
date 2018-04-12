@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class BoardActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,6 +28,8 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
     private ImageView continueSet;
     private RelativeLayout scoreBoardRelativeLayout;
     private ImageView scoreBoardBgImageView;
+    private ImageView player1ScoreTile;
+    private ImageView player2ScoreTile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,19 +43,34 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
 
         scoreBoardRelativeLayout = findViewById(R.id.score_board);
         scoreBoardBgImageView = findViewById(R.id.score_board_bg);
+        player1ScoreTile = findViewById(R.id.player1_tile);
+        player2ScoreTile = findViewById(R.id.player2_tile);
 
         // initialize players
         setupPlayers();
 
-        // initialize board
+        // initialize boards
         boardSize = 3;
         setupBoard(this.boardSize);
+        setupScoreBoard();
 
         // register click listeners
         ImageView menuItem = findViewById(R.id.board_menu);
         menuItem.setOnClickListener(this);
         continueSet = findViewById(R.id.continue_set);
         continueSet.setOnClickListener(this);
+    }
+
+    private void setupScoreBoard(){
+        if(players != null){
+            if(players.get(0).isTileCross()){
+                player1ScoreTile.setImageResource(R.drawable.white_cross_transparent);
+                player2ScoreTile.setImageResource(R.drawable.white_naught_transparent);
+            }else{
+                player1ScoreTile.setImageResource(R.drawable.white_naught_transparent);
+                player2ScoreTile.setImageResource(R.drawable.white_cross_transparent);
+            }
+        }
     }
 
     private void displayScore(boolean visible) {
@@ -65,7 +81,7 @@ public class BoardActivity extends AppCompatActivity implements View.OnClickList
         }else{
             scoreBoardRelativeLayout.setVisibility(View.INVISIBLE);
             scoreBoardBgImageView.setVisibility(View.INVISIBLE);
-            continueSet.setVisibility(View.INVISIBLE);
+            continueSet.setVisibility(View.GONE);
         }
     }
 

@@ -119,25 +119,25 @@
             android:src="@drawable/white_cross_transparent" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/board_menu"
-        android:layout_width="90dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         android:layout_marginBottom="24dp"
-        android:layout_marginLeft="32dp"
-        android:src="@drawable/menu">
+        android:layout_alignParentBottom="true" android:gravity="center">
+        <ImageView
+            android:id="@+id/board_menu"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu">
+        </ImageView>
 
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/continue_set"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="24dp"
-        android:layout_marginRight="32dp"
-        android:src="@drawable/continue_set"
-        android:visibility="invisible"></ImageView>
+        <ImageView
+            android:id="@+id/continue_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/continue_set"
+            android:layout_marginLeft="32dp"
+            android:visibility="gone"></ImageView>
+    </LinearLayout>
 </RelativeLayout>
