@@ -1,3 +1,8 @@
+/*
+ * Copyright 2018 Tic Tac Droid
+ *
+ */
+
 package com.jomeno.tictactoe.tictactoe;
 
 import android.content.Intent;
@@ -14,6 +19,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Create and manages a Tic Tac board game.
+ */
 public class BoardActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static String EXTRA_BOARD_SIZE = "board_size";

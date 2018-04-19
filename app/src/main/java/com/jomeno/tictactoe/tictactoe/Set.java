@@ -1,3 +1,8 @@
+/*
+ * Copyright 2018 Tic Tac Droid
+ *
+ */
+
 package com.jomeno.tictactoe.tictactoe;
 
 import java.util.ArrayList;

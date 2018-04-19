@@ -1,10 +1,10 @@
-package com.jomeno.tictactoe.tictactoe;
-
-import android.widget.ImageView;
-
 /**
  * Created by Jomeno on 4/9/2018.
  */
+
+package com.jomeno.tictactoe.tictactoe;
+
+import android.widget.ImageView;
 
 public class Tile {
 

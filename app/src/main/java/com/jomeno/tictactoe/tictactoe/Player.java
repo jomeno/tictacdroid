@@ -1,8 +1,8 @@
-package com.jomeno.tictactoe.tictactoe;
-
 /**
  * Created by Jomeno on 4/9/2018.
  */
+
+package com.jomeno.tictactoe.tictactoe;
 
 public class Player {
 
